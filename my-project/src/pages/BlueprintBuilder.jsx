@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { generateId, FIELD_TYPES } from '../utils/helpers';
 
-const BlueprintBuilder = ({ onNavigate }) => {
+const BlueprintBuilder = () => {
     const { addBlueprint } = useAppStore();
+    const navigate = useNavigate();
     const [name, setName] = useState('');
     const [fields, setFields] = useState([]);
 
@@ -30,16 +32,16 @@ const BlueprintBuilder = ({ onNavigate }) => {
     const handleSave = () => {
         if (!name || fields.length === 0) return;
         addBlueprint({ name, fields });
-        onNavigate('dashboard');
+        navigate('/');
     };
 
     return (
-        <div className="fade-in flex-1 overflow-auto p-8">
+        <div className="fade-in flex-1 overflow-auto p-8 bg-gray-50">
             <div className="max-w-4xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
-                    <button className="btn btn-secondary" onClick={() => onNavigate('dashboard')}>&larr; Back</button>
+                    <Link to="/" className="inline-block px-3 py-2 border border-gray-300 rounded-lg text-black font-medium hover:bg-gray-50 transition">&larr; Back</Link>
                     <button
-                        className="btn btn-primary"
+                        className="px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition"
                         onClick={handleSave}
                         disabled={!name || fields.length === 0}
                     >
@@ -47,10 +49,10 @@ const BlueprintBuilder = ({ onNavigate }) => {
                     </button>
                 </div>
 
-                <div className="card mb-8">
-                    <label className="block mb-2 font-medium">Blueprint Name</label>
+                <div className="border border-gray-200 rounded-lg p-6 bg-white mb-8">
+                    <label className="block mb-2 font-medium text-black">Blueprint Name</label>
                     <input
-                        className="input"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-black focus:outline-none focus:border-black"
                         placeholder="e.g. Non-Disclosure Agreement"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
@@ -59,19 +61,19 @@ const BlueprintBuilder = ({ onNavigate }) => {
 
                 <div className="grid grid-cols-2 gap-8">
                     <div>
-                        <h3 className="mb-4">Add Field</h3>
-                        <div className="card">
-                            <label className="block mb-2 text-sm">Field Label</label>
+                        <h3 className="text-lg font-bold text-black mb-4">Add Field</h3>
+                        <div className="border border-gray-200 rounded-lg p-6 bg-white">
+                            <label className="block mb-2 font-medium text-black text-sm">Field Label</label>
                             <input
-                                className="input"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-black mb-4 focus:outline-none focus:border-black"
                                 placeholder="e.g. Employee Name"
                                 value={currentLabel}
                                 onChange={(e) => setCurrentLabel(e.target.value)}
                             />
 
-                            <label className="block mb-2 text-sm mt-4">Field Type</label>
+                            <label className="block mb-2 font-medium text-black text-sm">Field Type</label>
                             <select
-                                className="select"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-black mb-4 focus:outline-none focus:border-black"
                                 value={currentType}
                                 onChange={(e) => setCurrentType(e.target.value)}
                             >
@@ -80,30 +82,30 @@ const BlueprintBuilder = ({ onNavigate }) => {
                                 ))}
                             </select>
 
-                            <button className="btn btn-secondary w-full mt-4" onClick={handleAddField}>
+                            <button className="w-full px-4 py-2 border border-gray-300 text-black rounded-lg font-medium hover:bg-gray-50 transition" onClick={handleAddField}>
                                 Add Field
                             </button>
                         </div>
                     </div>
 
                     <div>
-                        <h3 className="mb-4">Preview</h3>
-                        <div className="card min-h-96">
+                        <h3 className="text-lg font-bold text-black mb-4">Preview</h3>
+                        <div className="border border-gray-200 rounded-lg p-6 bg-white min-h-96">
                             {fields.length === 0 ? (
-                                <p className="text-center mt-8" style={{ color: 'var(--text-secondary)' }}>No fields added yet.</p>
+                                <p className="text-center mt-8 text-gray-600">No fields added yet.</p>
                             ) : (
                                 fields.map((field, index) => (
-                                    <div key={field.id} className="field-preview">
+                                    <div key={field.id} className="pb-4 mb-4 border-b border-gray-200 last:border-b-0">
                                         <div className="flex justify-between mb-1">
-                                            <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>{field.type}</span>
+                                            <span className="text-xs text-gray-600">{field.type}</span>
                                             <button
                                                 onClick={() => removeField(field.id)}
-                                                className="bg-none border-none text-xl leading-none cursor-pointer" style={{ color: 'var(--danger)' }}
+                                                className="bg-none border-none text-xl leading-none cursor-pointer text-red-600 hover:text-red-700"
                                             >
                                                 &times;
                                             </button>
                                         </div>
-                                        <div className="font-medium">{field.label}</div>
+                                        <div className="font-medium text-black">{field.label}</div>
                                     </div>
                                 ))
                             )}

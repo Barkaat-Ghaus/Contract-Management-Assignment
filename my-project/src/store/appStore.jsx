@@ -1,14 +1,41 @@
 import { create } from 'zustand';
 import { generateId, CONTRACT_STATUS } from '../utils/helpers';
+import { DEMO_BLUEPRINTS, DEMO_CONTRACTS } from '../models/demoData';
 
 export const useAppStore = create((set) => {
-    // Initialize from localStorage
+    // Initialize from localStorage with demo data as fallback
     const savedBlueprints = localStorage.getItem('blueprints');
     const savedContracts = localStorage.getItem('contracts');
 
+    // Parse saved data and check if it's empty, use demo data if it is
+    let initialBlueprints = DEMO_BLUEPRINTS;
+    let initialContracts = DEMO_CONTRACTS;
+
+    try {
+        if (savedBlueprints) {
+            const parsed = JSON.parse(savedBlueprints);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+                initialBlueprints = parsed;
+            }
+        }
+        if (savedContracts) {
+            const parsed = JSON.parse(savedContracts);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+                initialContracts = parsed;
+            }
+        }
+    } catch (error) {
+        console.error('Error parsing localStorage:', error);
+    }
+
     return {
-        blueprints: savedBlueprints ? JSON.parse(savedBlueprints) : [],
-        contracts: savedContracts ? JSON.parse(savedContracts) : [],
+        blueprints: initialBlueprints,
+        contracts: initialContracts,
+
+        resetToDemo: () => set(() => ({
+            blueprints: DEMO_BLUEPRINTS,
+            contracts: DEMO_CONTRACTS
+        })),
 
         addBlueprint: (blueprint) => set((state) => {
             const newBlueprints = [

@@ -1,10 +1,49 @@
 import React, { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
+import Dashboard from './pages/Dashboard'
+import ContractView from './pages/ContractView'
+import ContractCreator from './pages/ContractCreator'
+import BlueprintBuilder from './pages/BlueprintBuilder'
+import Blueprints from './pages/Blueprints'
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <App />,
+    children: [
+      {
+        index: true,
+        element: <Dashboard />,
+      },
+      {
+        path: 'view-contract/:id',
+        element: <ContractView />,
+      },
+      {
+        path: 'create-contract',
+        element: <ContractCreator />,
+      },
+      {
+        path: 'create-blueprint',
+        element: <BlueprintBuilder />,
+      },
+      {
+        path: 'blueprints',
+        element: <Blueprints />,
+      },
+      {
+        path: 'archive',
+        element: <div className="fade-in p-8">Archive page coming soon</div>,
+      },
+    ],
+  },
+])
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </StrictMode>,
 )

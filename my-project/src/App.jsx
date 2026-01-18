@@ -1,63 +1,51 @@
-import React, { useState } from "react";
+import React from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import Header from "./components/layout/Header";
-import Dashboard from "./pages/Dashboard";
-import ContractView from "./pages/ContractView";
-import ContractCreator from "./pages/ContractCreator";
-import BlueprintBuilder from "./pages/BlueprintBuilder";
 import Aside from "./components/layout/Aside";
 
 const App = () => {
-  const [currentPage, setCurrentPage] = useState('dashboard');
-  const [selectedContractId, setSelectedContractId] = useState(null);
-
-  const handleNavigate = (page, id) => {
-    setCurrentPage(page);
-    if (id) setSelectedContractId(id);
-  };
+  const location = useLocation();
 
   const getPageConfig = () => {
     const config = {
-      'dashboard': { title: 'Contracts', showButton: true },
-      'create-contract': { title: 'New Contract', showButton: false },
-      'create-blueprint': { title: 'Create Blueprint', showButton: false },
-      'view-contract': { title: 'Contract Details', showButton: false },
-      'blueprints': { title: 'Blueprints', showButton: true },
-      'archive': { title: 'Archive', showButton: false }
+      '/': { title: 'Contracts', showButton: true },
+      '/create-contract': { title: 'New Contract', showButton: false },
+      '/create-blueprint': { title: 'Create Blueprint', showButton: false },
+      '/blueprints': { title: 'Blueprints', showButton: true },
+      '/archive': { title: 'Archive', showButton: false }
     };
-    return config[currentPage] || { title: 'Overview', showButton: true };
+    
+    // Check if it's a view-contract route
+    if (location.pathname.startsWith('/view-contract/')) {
+      return { title: 'Contract Details', showButton: false };
+    }
+    
+    return config[location.pathname] || { title: 'Overview', showButton: true };
   };
 
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'dashboard':
-        return <Dashboard onNavigate={handleNavigate} />;
-      case 'view-contract':
-        return <ContractView contractId={selectedContractId} onNavigate={handleNavigate} />;
-      case 'create-contract':
-        return <ContractCreator onNavigate={handleNavigate} />;
-      case 'create-blueprint':
-        return <BlueprintBuilder onNavigate={handleNavigate} />;
-      case 'blueprints':
-        return <Dashboard onNavigate={handleNavigate} />;
-      case 'archive':
-        return <div className="fade-in p-8">Archive page coming soon</div>;
-      default:
-        return <Dashboard onNavigate={handleNavigate} />;
-    }
+  const getCurrentPage = () => {
+    const path = location.pathname;
+    if (path === '/') return 'dashboard';
+    if (path === '/create-contract') return 'create-contract';
+    if (path === '/create-blueprint') return 'create-blueprint';
+    if (path.startsWith('/view-contract/')) return 'view-contract';
+    if (path === '/blueprints') return 'blueprints';
+    if (path === '/archive') return 'archive';
+    return 'dashboard';
   };
 
   const pageConfig = getPageConfig();
+  const currentPage = getCurrentPage();
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <Aside currentPage={currentPage} onNavigate={handleNavigate} />
+      <Aside currentPage={currentPage} />
       <main className="flex-1 flex flex-col overflow-hidden">
         <Header 
-          pageTitle={pageConfig.title} 
-          onNewContract={() => handleNavigate('create-contract')}
+          pageTitle={pageConfig.title}
           showNewButton={pageConfig.showButton}
         />
-        {renderPage()}
+        <Outlet />
       </main>
     </div>
   );

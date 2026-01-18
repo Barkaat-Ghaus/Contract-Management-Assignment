@@ -1,11 +1,13 @@
 import React, { useMemo } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 import { CONTRACT_STATUS, FIELD_TYPES } from '../utils/helpers';
 import StatusBadge from '../components/StatusBadge';
 
-const ContractView = ({ contractId, onNavigate }) => {
+const ContractView = () => {
+    const { id } = useParams();
     const { contracts, updateContractData, updateContractStatus } = useAppStore();
-    const contract = contracts.find(c => c.id === contractId);
+    const contract = contracts.find(c => c.id === id);
 
     if (!contract) return <div>Contract not found</div>;
 
@@ -47,7 +49,7 @@ const ContractView = ({ contractId, onNavigate }) => {
             case FIELD_TYPES.TEXT:
                 return (
                     <input
-                        className="input disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-black disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:border-black"
                         value={field.value}
                         disabled={isLocked}
                         onChange={(e) => updateContractData(contract.id, field.id, e.target.value)}
@@ -57,7 +59,7 @@ const ContractView = ({ contractId, onNavigate }) => {
                 return (
                     <input
                         type="date"
-                        className="input disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-black disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:border-black"
                         value={field.value}
                         disabled={isLocked}
                         onChange={(e) => updateContractData(contract.id, field.id, e.target.value)}
@@ -68,7 +70,7 @@ const ContractView = ({ contractId, onNavigate }) => {
                     <div>
                         <input
                             type="checkbox"
-                            className="w-5 h-5 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-5 h-5 rounded border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                             checked={field.value === 'true'}
                             disabled={isLocked}
                             onChange={(e) => updateContractData(contract.id, field.id, e.target.checked ? 'true' : 'false')}
@@ -77,9 +79,9 @@ const ContractView = ({ contractId, onNavigate }) => {
                 );
             case FIELD_TYPES.SIGNATURE:
                 return (
-                    <div className="border-b-2 pb-2">
+                    <div className="border-b-2 border-black pb-2">
                         <input
-                            className="input border-none bg-transparent italic text-2xl font-cursive disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full px-0 py-2 border-none bg-transparent italic text-2xl font-cursive disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none"
                             placeholder={isLocked ? "" : "Type to sign..."}
                             value={field.value}
                             disabled={isLocked}
@@ -92,13 +94,13 @@ const ContractView = ({ contractId, onNavigate }) => {
     };
 
     return (
-        <div className="fade-in flex-1 overflow-auto p-8">
+        <div className="fade-in flex-1 overflow-auto p-8 bg-gray-50">
             <div className="mb-6">
-                <button className="btn btn-secondary mb-4" onClick={() => onNavigate('dashboard')}>&larr; Back to Contracts</button>
+                <Link to="/" className="inline-block px-3 py-2 border border-gray-300 rounded-lg text-black font-medium hover:bg-gray-50 transition mb-4">&larr; Back to Contracts</Link>
                 <div className="flex justify-between items-start">
                     <div>
-                        <h2 className="mb-1">{contract.name}</h2>
-                        <div className="flex gap-2 items-center text-sm" style={{ color: 'var(--text-secondary)' }}>
+                        <h2 className="text-2xl font-bold text-black mb-1">{contract.name}</h2>
+                        <div className="flex gap-2 items-center text-sm text-gray-600">
                             <span>Template: {contract.blueprintName}</span>
                             <span>&bull;</span>
                             <StatusBadge status={contract.status} />
@@ -108,7 +110,9 @@ const ContractView = ({ contractId, onNavigate }) => {
                         {getNextActions().map(action => (
                             <button
                                 key={action.status}
-                                className={`btn btn-${action.type === 'danger' ? 'danger' : 'primary'}`}
+                                className={`px-4 py-2 rounded-lg font-medium transition ${action.type === 'danger' 
+                                    ? 'bg-red-500 text-white hover:bg-red-600' 
+                                    : 'bg-black text-white hover:bg-gray-800'}`}
                                 onClick={() => updateContractStatus(contract.id, action.status)}
                             >
                                 {action.label}
@@ -119,24 +123,24 @@ const ContractView = ({ contractId, onNavigate }) => {
             </div>
 
             <div className="grid grid-cols-3 gap-8">
-                <div className="col-span-2 card">
-                    <h3 className="mb-6 pb-4 border-b">Contract Details</h3>
+                <div className="col-span-2 border border-gray-200 rounded-lg p-6 bg-white">
+                    <h3 className="text-lg font-bold text-black mb-6 pb-4 border-b border-gray-200">Contract Details</h3>
                     {contract.fields.map(field => (
                         <div key={field.id} className="mb-6">
-                            <label className="block mb-2 font-medium">{field.label}</label>
+                            <label className="block mb-2 font-medium text-black">{field.label}</label>
                             {renderFieldInput(field)}
                         </div>
                     ))}
                 </div>
 
                 <div>
-                    <div className="card mb-4">
-                        <h4 className="mb-4">History</h4>
+                    <div className="border border-gray-200 rounded-lg p-6 bg-white mb-4">
+                        <h4 className="text-lg font-bold text-black mb-4">History</h4>
                         <ul className="list-none">
                             {contract.history.slice().reverse().map((h, i) => (
-                                <li key={i} className="flex justify-between mb-2 text-sm">
+                                <li key={i} className="flex justify-between mb-2 text-sm items-center">
                                     <StatusBadge status={h.status} />
-                                    <span style={{ color: 'var(--text-secondary)' }}>
+                                    <span className="text-gray-600">
                                         {new Date(h.timestamp).toLocaleTimeString()}
                                     </span>
                                 </li>
@@ -144,9 +148,9 @@ const ContractView = ({ contractId, onNavigate }) => {
                         </ul>
                     </div>
                     {isLocked && (
-                        <div className="card" style={{ backgroundColor: 'rgba(59, 130, 246, 0.1)', borderColor: 'var(--accent-primary)' }}>
-                            <h4 className="mb-2" style={{ color: 'var(--accent-primary)' }}>Read Only</h4>
-                            <p className="text-sm">This contract is {contract.status.toLowerCase()} and cannot be edited.</p>
+                        <div className="border border-gray-300 rounded-lg p-6 bg-gray-50">
+                            <h4 className="text-lg font-bold text-black mb-2">Read Only</h4>
+                            <p className="text-sm text-gray-600">This contract is {contract.status.toLowerCase()} and cannot be edited.</p>
                         </div>
                     )}
                 </div>

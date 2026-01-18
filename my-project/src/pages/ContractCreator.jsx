@@ -1,37 +1,39 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 
-const ContractCreator = ({ onNavigate }) => {
+const ContractCreator = () => {
     const { blueprints, addContract } = useAppStore();
+    const navigate = useNavigate();
     const [selectedBlueprint, setSelectedBlueprint] = useState('');
     const [contractName, setContractName] = useState('');
 
     const handleCreate = () => {
         if (!selectedBlueprint || !contractName) return;
         addContract(selectedBlueprint, contractName);
-        onNavigate('dashboard');
+        navigate('/');
     };
 
     return (
-        <div className="fade-in flex-1 overflow-auto p-8">
+        <div className="fade-in flex-1 overflow-auto p-8 bg-gray-50">
             <div className="max-w-2xl mx-auto">
                 <div className="mb-8">
-                    <button className="btn btn-secondary" onClick={() => onNavigate('dashboard')}>&larr; Back</button>
+                    <Link to="/" className="inline-block px-3 py-2 border border-gray-300 rounded-lg text-black font-medium hover:bg-gray-50 transition">&larr; Back</Link>
                 </div>
 
-                <div className="card">
-                    <h2 className="mb-6">Start New Contract</h2>
+                <div className="border border-gray-200 rounded-lg p-6 bg-white">
+                    <h2 className="text-2xl font-bold text-black mb-6">Start New Contract</h2>
 
                     {blueprints.length === 0 ? (
                         <div className="text-center py-4">
-                            <p className="mb-4">No blueprints available.</p>
-                            <button className="btn btn-primary" onClick={() => onNavigate('create-blueprint')}>Create a Blueprint first</button>
+                            <p className="mb-4 text-gray-600">No blueprints available.</p>
+                            <Link to="/create-blueprint" className="inline-block px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition">Create a Blueprint first</Link>
                         </div>
                     ) : (
                         <>
-                            <label className="block mb-2">Select Blueprint</label>
+                            <label className="block mb-2 font-medium text-black">Select Blueprint</label>
                             <select
-                                className="select"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-black mb-4 hover:border-gray-400 focus:outline-none focus:border-black"
                                 value={selectedBlueprint}
                                 onChange={(e) => setSelectedBlueprint(e.target.value)}
                             >
@@ -41,16 +43,16 @@ const ContractCreator = ({ onNavigate }) => {
                                 ))}
                             </select>
 
-                            <label className="block mb-2 mt-4">Contract Name</label>
+                            <label className="block mb-2 font-medium text-black">Contract Name</label>
                             <input
-                                className="input"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-black mb-6 focus:outline-none focus:border-black"
                                 placeholder="e.g. Acme Corp NDA"
                                 value={contractName}
                                 onChange={(e) => setContractName(e.target.value)}
                             />
 
                             <button
-                                className="btn btn-primary w-full mt-4"
+                                className="w-full px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition"
                                 disabled={!selectedBlueprint || !contractName}
                                 onClick={handleCreate}
                             >

@@ -1,72 +1,51 @@
 import React, { useState } from 'react';
 import { useAppStore } from '../store/appStore';
-import StatusBadge from '../components/StatusBadge';
-import { formatDate } from '../utils/helpers';
+import ContractCard from '../components/cards/ContractCard';
 
-const Dashboard = ({ onNavigate }) => {
+const Dashboard = () => {
     const { contracts } = useAppStore();
     const [filter, setFilter] = useState('All');
 
-    const filteredContracts = filter === 'All'
-        ? contracts
-        : contracts.filter(c => c.status === filter);
+    // Ensure contracts is always an array
+    const allContracts = Array.isArray(contracts) ? contracts : [];
 
-    const statuses = ['All', ...new Set(contracts.map(c => c.status))];
+    const filteredContracts = filter === 'All'
+        ? allContracts
+        : allContracts.filter(c => c.status === filter);
+
+    const statuses = ['All', ...new Set(allContracts.map(c => c.status))];
 
     return (
-        <div className="fade-in flex-1 overflow-auto p-8">
-            <div className="mb-4">
-                <span className="mr-2" style={{ color: 'var(--text-secondary)' }}>Filter by:</span>
-                <select
-                    className="select inline-block w-auto"
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value)}
-                >
-                    {statuses.map(s => (
-                        <option key={s} value={s}>{s}</option>
-                    ))}
-                </select>
+        <div className="fade-in flex-1 overflow-auto p-8 bg-gray-50">
+            <div className="mb-6 flex justify-between items-center">
+                <div>
+                    <span className="mr-2 text-gray-600">Filter by:</span>
+                    <select
+                        className="inline-block px-3 py-2 border border-gray-300 rounded-lg bg-white text-black hover:border-gray-400 focus:outline-none focus:border-black"
+                        value={filter}
+                        onChange={(e) => setFilter(e.target.value)}
+                    >
+                        {statuses.map(s => (
+                            <option key={s} value={s}>{s}</option>
+                        ))}
+                    </select>
+                </div>
+                <span className="text-sm text-gray-600">
+                    {filteredContracts.length} contract{filteredContracts.length !== 1 ? 's' : ''}
+                </span>
             </div>
 
-            <div className="card p-0 overflow-hidden">
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>Contract Name</th>
-                            <th>Blueprint</th>
-                            <th>Status</th>
-                            <th>Created Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredContracts.length === 0 ? (
-                            <tr>
-                                <td colSpan="5" className="text-center py-8" style={{ color: 'var(--text-secondary)' }}>
-                                    No contracts found. Create one to get started.
-                                </td>
-                            </tr>
-                        ) : (
-                            filteredContracts.map(contract => (
-                                <tr key={contract.id}>
-                                    <td className="font-medium">{contract.name}</td>
-                                    <td>{contract.blueprintName}</td>
-                                    <td><StatusBadge status={contract.status} /></td>
-                                    <td>{formatDate(contract.createdAt)}</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-secondary text-xs px-2 py-1"
-                                            onClick={() => onNavigate('view-contract', contract.id)}
-                                        >
-                                            View
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
-            </div>
+            {filteredContracts.length === 0 ? (
+                <div className="border border-gray-200 rounded-lg p-8 text-center bg-white">
+                    <p className="text-gray-600">No contracts found. Create one to get started.</p>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredContracts.map(contract => (
+                        <ContractCard key={contract.id} contract={contract} />
+                    ))}
+                </div>
+            )}
         </div>
     );
 };
