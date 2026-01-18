@@ -34,10 +34,6 @@ const router = createBrowserRouter([
         path: 'blueprints',
         element: <Blueprints />,
       },
-      {
-        path: 'archive',
-        element: <div className="fade-in p-8">Archive page coming soon</div>,
-      },
     ],
   },
 ])

@@ -1,25 +1,24 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
-import { generateId, FIELD_TYPES } from '../utils/helpers';
+import {  generateId,FIELD_TYPES } from '../utils/helpers';
 
 const BlueprintBuilder = () => {
     const { addBlueprint } = useAppStore();
-    const navigate = useNavigate();
     const [name, setName] = useState('');
     const [fields, setFields] = useState([]);
 
-    // Field creation state
     const [currentLabel, setCurrentLabel] = useState('');
     const [currentType, setCurrentType] = useState(FIELD_TYPES.TEXT);
 
     const handleAddField = () => {
-        if (!currentLabel) return;
+        const trimmedLabel = currentLabel.trim();
+        if (!trimmedLabel) return;
         setFields([...fields, {
             id: generateId(),
-            label: currentLabel,
+            label: trimmedLabel,
             type: currentType,
-            position: fields.length + 1 // Simple ordering
+            required: false
         }]);
         setCurrentLabel('');
         setCurrentType(FIELD_TYPES.TEXT);
@@ -32,7 +31,9 @@ const BlueprintBuilder = () => {
     const handleSave = () => {
         if (!name || fields.length === 0) return;
         addBlueprint({ name, fields });
-        navigate('/');
+        setName('');
+        setFields([]);
+        alert('Blueprint created successfully!');
     };
 
     return (
@@ -82,7 +83,11 @@ const BlueprintBuilder = () => {
                                 ))}
                             </select>
 
-                            <button className="w-full px-4 py-2 border border-gray-300 text-black rounded-lg font-medium hover:bg-gray-50 transition" onClick={handleAddField}>
+                            <button 
+                                className="w-full px-4 py-2 border border-gray-300 text-black rounded-lg font-medium hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed" 
+                                onClick={handleAddField}
+                                disabled={!currentLabel.trim()}
+                            >
                                 Add Field
                             </button>
                         </div>
@@ -90,24 +95,28 @@ const BlueprintBuilder = () => {
 
                     <div>
                         <h3 className="text-lg font-bold text-black mb-4">Preview</h3>
-                        <div className="border border-gray-200 rounded-lg p-6 bg-white min-h-96">
+                        <div className="border border-gray-200 rounded-lg bg-white p-6 min-h-96">
                             {fields.length === 0 ? (
                                 <p className="text-center mt-8 text-gray-600">No fields added yet.</p>
                             ) : (
-                                fields.map((field, index) => (
-                                    <div key={field.id} className="pb-4 mb-4 border-b border-gray-200 last:border-b-0">
-                                        <div className="flex justify-between mb-1">
-                                            <span className="text-xs text-gray-600">{field.type}</span>
+                                <div className="space-y-3">
+                                    {fields.map((field, index) => (
+                                        <div key={field.id} className="flex items-center justify-between p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                                            <div className="flex-1">
+                                                <div className="flex items-center gap-3">
+                                                    <span className="text-sm font-semibold text-gray-900">{index + 1}. {field.label}</span>
+                                                    <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded font-medium">{field.type}</span>
+                                                </div>
+                                            </div>
                                             <button
                                                 onClick={() => removeField(field.id)}
-                                                className="bg-none border-none text-xl leading-none cursor-pointer text-red-600 hover:text-red-700"
+                                                className="text-red-600 hover:text-red-700 font-semibold text-lg leading-none"
                                             >
                                                 &times;
                                             </button>
                                         </div>
-                                        <div className="font-medium text-black">{field.label}</div>
-                                    </div>
-                                ))
+                                    ))}
+                                </div>
                             )}
                         </div>
                     </div>

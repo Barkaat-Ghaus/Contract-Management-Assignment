@@ -2,8 +2,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import StatusBadge from '../StatusBadge';
 import { formatDate } from '../../utils/helpers';
+import { useAppStore } from '../../store/appStore';
 
 const ContractCard = ({ contract }) => {
+    const { deleteContract } = useAppStore();
+
+    const handleDelete = () => {
+        if (window.confirm(`Are you sure you want to delete "${contract.name}"? This action cannot be undone.`)) {
+            deleteContract(contract.id);
+        }
+    };
 
     return (
         <div className="border border-gray-200 rounded-lg p-6 bg-white hover:shadow-lg transition">
@@ -30,12 +38,20 @@ const ContractCard = ({ contract }) => {
                 </div>
             </div>
 
-            <Link
-                to={`/view-contract/${contract.id}`}
-                className="w-full flex items-center justify-center px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition"
-            >
-                View Contract
-            </Link>
+            <div className="space-y-2">
+                <Link
+                    to={`/view-contract/${contract.id}`}
+                    className="w-full flex items-center justify-center px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition"
+                >
+                    View Contract
+                </Link>
+                <button
+                    onClick={handleDelete}
+                    className="w-full px-4 py-2 border border-red-500 text-red-600 rounded-lg font-medium hover:bg-red-50 transition"
+                >
+                    Delete
+                </button>
+            </div>
         </div>
     );
 };

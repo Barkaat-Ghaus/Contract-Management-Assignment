@@ -1,18 +1,48 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
 
 const ContractCreator = () => {
     const { blueprints, addContract } = useAppStore();
-    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [selectedBlueprint, setSelectedBlueprint] = useState('');
     const [contractName, setContractName] = useState('');
+    const [createdContractId, setCreatedContractId] = useState(null);
+
+    // Auto-select blueprint if passed via URL parameter
+    useEffect(() => {
+        const blueprintId = searchParams.get('blueprintId');
+        if (blueprintId && blueprints.find(b => b.id === blueprintId)) {
+            setSelectedBlueprint(blueprintId);
+        }
+    }, [searchParams, blueprints]);
 
     const handleCreate = () => {
         if (!selectedBlueprint || !contractName) return;
-        addContract(selectedBlueprint, contractName);
-        navigate('/');
+        const newContractId = addContract(selectedBlueprint, contractName);
+        setCreatedContractId(newContractId);
+        setSelectedBlueprint('');
+        setContractName('');
     };
+
+    if (createdContractId) {
+        return (
+            <div className="fade-in flex-1 overflow-auto p-8 bg-gray-50">
+                <div className="max-w-2xl mx-auto">
+                    <div className="border border-gray-200 rounded-lg p-6 bg-white">
+                        <h2 className="text-2xl font-bold text-black mb-4">Contract Created!</h2>
+                        <p className="text-gray-600 mb-6">Your contract has been created successfully.</p>
+                        <Link
+                            to={`/view-contract/${createdContractId}`}
+                            className="inline-block px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition"
+                        >
+                            View Contract
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="fade-in flex-1 overflow-auto p-8 bg-gray-50">

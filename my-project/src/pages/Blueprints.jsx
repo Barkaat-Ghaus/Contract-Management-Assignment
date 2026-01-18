@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
+import BlueprintCard from '../components/cards/BluePrintCard';
 
 const Blueprints = () => {
-    const { blueprints } = useAppStore();
+    const { blueprints, deleteBlueprint } = useAppStore();
     const [selectedCategory, setSelectedCategory] = useState('All');
 
     // Get unique categories
@@ -13,6 +14,12 @@ const Blueprints = () => {
     const filteredBlueprints = selectedCategory === 'All'
         ? blueprints
         : blueprints.filter(b => (b.category || 'General') === selectedCategory);
+
+    const handleDeleteBlueprint = (id, name) => {
+        if (window.confirm(`Are you sure you want to delete the blueprint "${name}"? This action cannot be undone.`)) {
+            deleteBlueprint(id);
+        }
+    };
 
     const getFieldTypeBg = (type) => {
         const colors = {
@@ -68,55 +75,13 @@ const Blueprints = () => {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredBlueprints.map(blueprint => (
-                        <div key={blueprint.id} className="border border-gray-200 rounded-lg p-6 bg-white hover:shadow-lg transition">
-                            <div className="mb-4">
-                                <div className="flex justify-between items-start mb-2">
-                                    <h3 className="text-lg font-semibold text-black">{blueprint.name}</h3>
-                                    <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700">
-                                        {blueprint.category || 'General'}
-                                    </span>
-                                </div>
-                                {blueprint.description && (
-                                    <p className="text-sm text-gray-600">
-                                        {blueprint.description}
-                                    </p>
-                                )}
-                            </div>
-
-                            <div className="mb-4 pb-4 border-b border-gray-200">
-                                <p className="text-xs font-semibold mb-2 uppercase text-gray-600">
-                                    Fields ({blueprint.fields.length})
-                                </p>
-                                <div className="flex flex-wrap gap-2">
-                                    {blueprint.fields.map(field => (
-                                        <span 
-                                            key={field.id} 
-                                            className={`text-xs px-2 py-1 rounded ${getFieldTypeBg(field.type)} ${getFieldTypeText(field.type)}`}
-                                        >
-                                            {field.type}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Link
-                                    to="/create-contract"
-                                    className="block w-full px-4 py-2 bg-black text-white text-sm rounded-lg text-center font-medium hover:bg-gray-800 transition"
-                                >
-                                    Create Contract
-                                </Link>
-                                <button
-                                    className="w-full px-4 py-2 border border-gray-300 text-black text-sm rounded-lg font-medium hover:bg-gray-50 transition"
-                                    onClick={() => {
-                                        const details = blueprint.fields.map(f => `${f.label || f.name} (${f.type})`).join(', ');
-                                        alert(`Blueprint Details:\n\n${details}`);
-                                    }}
-                                >
-                                    View Details
-                                </button>
-                            </div>
-                        </div>
+                        <BlueprintCard
+                            key={blueprint.id}
+                            blueprint={blueprint}
+                            onDelete={handleDeleteBlueprint}
+                            getFieldTypeBg={getFieldTypeBg}
+                            getFieldTypeText={getFieldTypeText}
+                        />
                     ))}
                 </div>
             )}
