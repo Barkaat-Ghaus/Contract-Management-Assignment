@@ -3,7 +3,6 @@ import { Outlet, useLocation } from "react-router-dom";
 import Header from "./components/layout/Header";
 import Aside from "./components/layout/Aside";
 
-// Configuration for pages
 const PAGE_CONFIG = {
   '/': { title: 'Contracts', showButton: true, page: 'dashboard' },
   '/create-contract': { title: 'New Contract', showButton: false, page: 'create-contract' },

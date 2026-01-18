@@ -11,7 +11,7 @@ const Aside = ({ currentPage }) => {
         <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-black">
           <span className="pb-1 text-3xl text-white font-bold">C</span>
         </div>
-        <h1 className="text-lg font-bold tracking-tight text-black">Contract.io</h1>
+        <h1 className="text-lg font-bold tracking-tight text-black">Contract Times</h1>
       </div>
 
         <nav className="flex-1 space-y-8">
@@ -45,10 +45,10 @@ const Aside = ({ currentPage }) => {
 
       <div className="mt-auto pt-6 border-t border-gray-200">
         <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-50">
-          <img alt="Profile" className="w-10 h-10 rounded-full object-cover"  />
+          <img  className="w-10 h-10 rounded-full object-cover"  />
           <div className="flex-1">
             <p className="text-xs font-bold text-black">user</p>
-            <p className="text-xs text-gray-500">manger</p>
+            <p className="text-xs text-gray-500">manager</p>
           </div>
         </div>
       </div>

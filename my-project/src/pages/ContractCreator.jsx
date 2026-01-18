@@ -9,7 +9,7 @@ const ContractCreator = () => {
     const [contractName, setContractName] = useState('');
     const [createdContractId, setCreatedContractId] = useState(null);
 
-    // Auto-select blueprint if passed via URL parameter
+    
     useEffect(() => {
         const blueprintId = searchParams.get('blueprintId');
         if (blueprintId && blueprints.find(b => b.id === blueprintId)) {
@@ -36,7 +36,7 @@ const ContractCreator = () => {
                             to={`/view-contract/${createdContractId}`}
                             className="inline-block px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition"
                         >
-                            View Contract
+                            fill Contract
                         </Link>
                     </div>
                 </div>

@@ -27,7 +27,7 @@ const ContractView = () => {
 
         const actions = [];
 
-        // Sequential State Transitions
+      
         switch (contract.status) {
             case CONTRACT_STATUS.CREATED:
                 actions.push({ label: 'Approve', status: CONTRACT_STATUS.APPROVED, type: 'primary' });
@@ -44,7 +44,7 @@ const ContractView = () => {
             default: break;
         }
 
-        // Revoke is always available unless locked
+        
         if (contract.status !== CONTRACT_STATUS.LOCKED) {
             actions.push({ label: 'Revoke', status: CONTRACT_STATUS.REVOKED, type: 'danger' });
         }
@@ -56,25 +56,31 @@ const ContractView = () => {
         switch (field.type) {
             case FIELD_TYPES.TEXT:
                 return (
-                    <input
+                    <>
+                 
+                     <input
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-black disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:border-black"
+                        placeholder={field.label}
                         value={field.value}
                         disabled={isLocked}
                         onChange={(e) => updateContractData(contract.id, field.id, e.target.value)}
-                    />
+                    /></>
+                    
+                   
                 );
             case FIELD_TYPES.DATE:
                 return (
-                    <input
+                  <input
                         type="date"
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-black disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:border-black"
                         value={field.value}
                         disabled={isLocked}
                         onChange={(e) => updateContractData(contract.id, field.id, e.target.value)}
                     />
+                  
                 );
             case FIELD_TYPES.CHECKBOX:
-                // Check if field has options for multi-select, otherwise use boolean checkbox
+                
                 if (field.options && field.options.length > 0) {
                     const checkedValues = field.value ? field.value.split(',').map(v => v.trim()) : [];
                     return (
@@ -134,6 +140,12 @@ const ContractView = () => {
             default: return null;
         }
     };
+
+
+
+
+
+
 
     if (deleteConfirmed) {
         return (

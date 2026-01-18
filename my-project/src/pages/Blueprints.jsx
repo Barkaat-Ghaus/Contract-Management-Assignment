@@ -7,10 +7,9 @@ const Blueprints = () => {
     const { blueprints, deleteBlueprint } = useAppStore();
     const [selectedCategory, setSelectedCategory] = useState('All');
 
-    // Get unique categories
     const categories = ['All', ...new Set(blueprints.map(b => b.category || 'General'))];
 
-    // Filter blueprints by category
+   
     const filteredBlueprints = selectedCategory === 'All'
         ? blueprints
         : blueprints.filter(b => (b.category || 'General') === selectedCategory);

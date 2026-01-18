@@ -32,9 +32,10 @@ const BlueprintCard = ({ blueprint, onDelete, getFieldTypeBg, getFieldTypeText }
                 </p>
                 <div className="flex flex-wrap gap-2">
                     {blueprint.fields.map(field => (
+    
                         <span 
                             key={field.id} 
-                            className={`text-xs px-2.5 py-1 rounded font-medium ${getFieldTypeBg(field.type)} ${getFieldTypeText(field.type)}`}
+                            className={`text-xs px-2.5 py-1 rounded font-medium ${getFieldTypeBg(field.label)} ${getFieldTypeText(field.type)}`}
                         >
                             {field.type}
                         </span>

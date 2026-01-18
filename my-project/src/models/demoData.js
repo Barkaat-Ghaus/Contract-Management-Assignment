@@ -175,4 +175,23 @@ export const DEMO_CONTRACTS = [
       { status: CONTRACT_STATUS.SIGNED, timestamp: new Date('2026-01-04') }
     ]
   },
+    {
+    id: 'contract-1',
+    blueprintId: 'bp-nda',
+    blueprintName: 'Non-Disclosure Agreement (NDA)',
+    name: 'Acme Corp NDA',
+    status: CONTRACT_STATUS.CREATED,
+    createdAt: new Date('2026-01-10'),
+    fields: [
+      { id: 'f1', label: 'Disclosing Party', type: FIELD_TYPES.TEXT, value: 'Acme Corporation', required: true, positionX: 20, positionY: 20 },
+      { id: 'f2', label: 'Receiving Party', type: FIELD_TYPES.TEXT, value: 'Tech Solutions Inc.', required: true, positionX: 20, positionY: 80 },
+      { id: 'f3', label: 'Effective Date', type: FIELD_TYPES.DATE, value: '2026-01-15', required: true, positionX: 20, positionY: 140 },
+      { id: 'f4', label: 'Confidentiality Period (Years)', type: FIELD_TYPES.TEXT, value: '3', required: true, positionX: 20, positionY: 200 },
+      { id: 'f5', label: 'Mutual NDA', type: FIELD_TYPES.CHECKBOX, value: 'true', required: false, positionX: 20, positionY: 260 },
+      { id: 'f6', label: 'Authorized Signature', type: FIELD_TYPES.SIGNATURE, value: '', required: true, positionX: 20, positionY: 320 },
+    ],
+    history: [
+      { status: CONTRACT_STATUS.CREATED, timestamp: new Date('2026-01-10') }
+    ]
+  },
 ];

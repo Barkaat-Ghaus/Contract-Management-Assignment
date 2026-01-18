@@ -6,7 +6,7 @@ const Dashboard = () => {
     const { contracts } = useAppStore();
     const [filter, setFilter] = useState('All');
 
-    // Ensure contracts is always an array
+ 
     const allContracts = Array.isArray(contracts) ? contracts : [];
 
     const filteredContracts = filter === 'All'

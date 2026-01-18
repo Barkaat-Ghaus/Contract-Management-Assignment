@@ -3,11 +3,11 @@ import { generateId, CONTRACT_STATUS } from '../utils/helpers';
 import { DEMO_BLUEPRINTS, DEMO_CONTRACTS } from '../models/demoData';
 
 export const useAppStore = create((set) => {
-    // Initialize from localStorage with demo data as fallback
+
     const savedBlueprints = localStorage.getItem('blueprints');
     const savedContracts = localStorage.getItem('contracts');
 
-    // Parse saved data and check if it's empty, use demo data if it is
+   
     let initialBlueprints = DEMO_BLUEPRINTS;
     let initialContracts = DEMO_CONTRACTS;
 
