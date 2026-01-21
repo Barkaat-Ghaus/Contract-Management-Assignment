@@ -4,7 +4,8 @@
 This is a frontend-only Contract Management Platform built as part of a frontend assignment.  
 The application allows users to create reusable contract blueprints, generate contracts from those blueprints, manage contract lifecycles, and view contracts in a dashboard.
 
-
+## Why I Chose This Tech Stack
+I chose this tech stack because I have hands-on experience with these tools. I am comfortable using them and possess the knowledge required to build a web application confidently. Additionally, this stack is highly efficient, making the development and design process seamles
 
 ## Tech Stack
 - React (Vite) npm i create Vite@latest
