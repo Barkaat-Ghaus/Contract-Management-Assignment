@@ -1,5 +1,7 @@
 # Contract Management Platform
 
+link: https://contract-management-assignment.netlify.app/
+
 ## Overview
 This is a frontend-only Contract Management Platform built as part of a frontend assignment.  
 The application allows users to create reusable contract blueprints, generate contracts from those blueprints, manage contract lifecycles, and view contracts in a dashboard.
